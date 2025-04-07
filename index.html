@@ -27,7 +27,7 @@
       border-radius: 30px;
     }
 
-    .answer-button {
+    .answer-button, .main-button {
       display: inline-block;
       width: 200px;
       margin: 10px;
@@ -42,7 +42,7 @@
       transition: transform 0.2s ease;
     }
 
-    .answer-button:hover {
+    .answer-button:hover, .main-button:hover {
       transform: scale(1.05);
     }
 
@@ -67,8 +67,11 @@
 </head>
 <body>
 
-<h1>🎉 Boss' Birthday Trivia 🎉</h1>
-<button onclick="startTrivia()">Play Trivia</button>
+<h1>🎉 Boss' Birthday Celebration 🎉</h1>
+<button class="main-button" onclick="startTrivia()">Play Trivia</button>
+<a href="https://app.gather.town/invite?token=gtO21pgXTu2GSVgYHaoi" target="_blank">
+  <button class="main-button">Explore the City 🏙️</button>
+</a>
 
 <div id="game-container"></div>
 
@@ -113,10 +116,7 @@ function startTrivia() {
         const correct = choice === questions[current].answer;
         feedbackDiv.textContent = correct ? "Correct! 🎉" : "Wrong! ❌";
         if (correct) score++;
-
-        // Disable all buttons
         Array.from(answersDiv.children).forEach(b => b.disabled = true);
-
         setTimeout(() => {
           current++;
           if (current < questions.length) showQuestion();
