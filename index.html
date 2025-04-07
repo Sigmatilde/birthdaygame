@@ -4,23 +4,62 @@
   <meta charset="UTF-8">
   <title>Boss' Birthday Game</title>
   <style>
-    body { font-family: Arial; text-align: center; background-color: #f5f5f5; margin: 0; padding: 20px; }
-    #game-container { display: none; }
-    .question { font-weight: bold; }
-    button { margin: 5px; padding: 10px 15px; }
-    canvas { background: #222; margin-top: 20px; }
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background: #fff0fb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    #game-container {
+      display: none;
+    }
+
+    .question {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 20px auto;
+      padding: 20px;
+      background: linear-gradient(145deg, #f9ccff, #ff7edd);
+      color: #5a005a;
+      width: 60%;
+      border-radius: 30px;
+    }
+
+    .answer-button {
+      display: inline-block;
+      width: 200px;
+      margin: 10px;
+      padding: 15px 20px;
+      background: linear-gradient(145deg, #f7baff, #f472d0);
+      color: #4d004d;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .answer-button:hover {
+      transform: scale(1.05);
+    }
+
+    ol {
+      text-align: left;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
 
-<h1>Welcome to Boss' Birthday Game!</h1>
+<h1>🎉 Boss' Birthday Trivia 🎉</h1>
 <button onclick="startTrivia()">Play Trivia</button>
-<button onclick="startFighting()">Play Fighting Game</button>
 
 <div id="game-container"></div>
 
 <script>
-// ======== TRIVIA ==========
 const triviaData = [
   { question: "What is Alice's favorite color?", choices: ["Red", "Blue", "Green", "Purple"], answer: "Blue" },
   { question: "Which city does Bob live in?", choices: ["Rome", "Milan", "Florence", "Venice"], answer: "Milan" },
@@ -46,9 +85,11 @@ function startTrivia() {
   let score = 0;
 
   function showQuestion() {
-    container.innerHTML = `<div class="question">${questions[current].question}</div>`;
+    container.innerHTML = `<div class='question'>${questions[current].question}</div>`;
+    const answersDiv = document.createElement("div");
     questions[current].choices.forEach(choice => {
       const btn = document.createElement("button");
+      btn.className = "answer-button";
       btn.textContent = choice;
       btn.onclick = () => {
         if (choice === questions[current].answer) score++;
@@ -56,8 +97,9 @@ function startTrivia() {
         if (current < questions.length) showQuestion();
         else showScore();
       };
-      container.appendChild(btn);
+      answersDiv.appendChild(btn);
     });
+    container.appendChild(answersDiv);
   }
 
   function showScore() {
@@ -76,18 +118,12 @@ function startTrivia() {
 
     const retry = document.createElement("button");
     retry.textContent = "Play Again";
+    retry.className = "answer-button";
     retry.onclick = startTrivia;
     container.appendChild(retry);
   }
 
   showQuestion();
-}
-
-// ========= FIGHTING GAME (placeholder) =========
-function startFighting() {
-  const container = document.getElementById("game-container");
-  container.innerHTML = "<h2>Fighting Game coming soon!</h2>";
-  container.style.display = "block";
 }
 </script>
 
