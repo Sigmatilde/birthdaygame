@@ -46,6 +46,19 @@
       transform: scale(1.05);
     }
 
+    .feedback {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 15px;
+      color: #5a005a;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     ol {
       text-align: left;
       display: inline-block;
@@ -87,19 +100,31 @@ function startTrivia() {
   function showQuestion() {
     container.innerHTML = `<div class='question'>${questions[current].question}</div>`;
     const answersDiv = document.createElement("div");
+    const feedbackDiv = document.createElement("div");
+    feedbackDiv.className = "feedback";
+    container.appendChild(answersDiv);
+    container.appendChild(feedbackDiv);
+
     questions[current].choices.forEach(choice => {
       const btn = document.createElement("button");
       btn.className = "answer-button";
       btn.textContent = choice;
       btn.onclick = () => {
-        if (choice === questions[current].answer) score++;
-        current++;
-        if (current < questions.length) showQuestion();
-        else showScore();
+        const correct = choice === questions[current].answer;
+        feedbackDiv.textContent = correct ? "Correct! 🎉" : "Wrong! ❌";
+        if (correct) score++;
+
+        // Disable all buttons
+        Array.from(answersDiv.children).forEach(b => b.disabled = true);
+
+        setTimeout(() => {
+          current++;
+          if (current < questions.length) showQuestion();
+          else showScore();
+        }, 1000);
       };
       answersDiv.appendChild(btn);
     });
-    container.appendChild(answersDiv);
   }
 
   function showScore() {
