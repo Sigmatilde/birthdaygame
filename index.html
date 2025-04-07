@@ -19,7 +19,7 @@
     .question {
       font-size: 24px;
       font-weight: bold;
-      margin: 20px auto;
+      margin: 20px auto 10px auto;
       padding: 20px;
       background: linear-gradient(145deg, #f9ccff, #ff7edd);
       color: #5a005a;
@@ -27,9 +27,16 @@
       border-radius: 30px;
     }
 
+    .question-img {
+      width: 300px;
+      max-width: 80%;
+      border-radius: 20px;
+      margin: 10px auto;
+    }
+
     .answer-button, .main-button {
       display: inline-block;
-      width: 200px;
+      width: 160px;
       margin: 10px;
       padding: 15px 20px;
       background: linear-gradient(145deg, #f7baff, #f472d0);
@@ -68,27 +75,60 @@
 <body>
 
 <h1>🎉 Boss' Birthday Celebration 🎉</h1>
-<button class="main-button" onclick="startTrivia()">Play Trivia</button>
-<a href="https://app.gather.town/invite?token=gtO21pgXTu2GSVgYHaoi" target="_blank">
-  <button class="main-button">Explore the City 🏙️</button>
-</a>
+<div id="main-buttons">
+  <button class="main-button" onclick="startTrivia()">Play Trivia</button>
+  <a href="https://app.gather.town/invite?token=gtO21pgXTu2GSVgYHaoi" target="_blank">
+    <button class="main-button">Explore the City 🏙️</button>
+  </a>
+</div>
 
 <div id="game-container"></div>
 
 <script>
 const triviaData = [
-  { question: "What is Alice's favorite color?", choices: ["Red", "Blue", "Green", "Purple"], answer: "Blue" },
-  { question: "Which city does Bob live in?", choices: ["Rome", "Milan", "Florence", "Venice"], answer: "Milan" },
-  { question: "What's Charlie's favorite food?", choices: ["Pizza", "Sushi", "Burger", "Tacos"], answer: "Sushi" },
-  { question: "What instrument does Dana play?", choices: ["Guitar", "Piano", "Violin", "Drums"], answer: "Piano" },
-  { question: "Where did Eva go to college?", choices: ["Harvard", "MIT", "Stanford", "Oxford"], answer: "Stanford" },
-  { question: "What is Frank's hobby?", choices: ["Cooking", "Gaming", "Dancing", "Photography"], answer: "Gaming" }
+  {
+    question: "Quanto alza di bench Roberto",
+    choices: ["30kg", "60kg", "100kg", "110kg"],
+    answer: "110kg",
+    image: "images/roberto_small.png"
+  },
+  {
+    question: "Cosa ha ricevuto la zia per Natale?",
+    choices: ["Un vibratore", "Un cappello per la cervicale", "un braccialetto di pelle umana", "non lo so"],
+    answer: "Un cappello per la cervicale",
+    image: "images/zia_hat.png"
+  },
+  {
+    question: "Cosa ha gridato Larissa dopo due giorni con Giuseppe e Raquel?",
+    choices: ["AAAAAAAAH GIUSEPPE E' TROPPO FORTE", "AAAAAAAAH GIUSEPPE E' NUDO", "AAAAAAAAH RAQUEL PUZZA", "AAAAAAAAH TIZI RALLENTA"],
+    answer: "AAAAAAAAH GIUSEPPE E' NUDO",
+    image: "images/larissa.png"
+  },
+  {
+    question: "Quale paese produce il miglior olio d'oliva?",
+    choices: ["Italia", "Spagna", "QuelloSpagnoloFaSchifo", "ChiedeteaRaquel"],
+    answer: "Italia",
+    image: "images/italy.png"
+  },
+  {
+    question: "Where did Eva go to college?",
+    choices: ["Harvard", "MIT", "Stanford", "Oxford"],
+    answer: "Stanford",
+    image: "images/eva_college.png"
+  },
+  {
+    question: "What is Frank's hobby?",
+    choices: ["Cooking", "Gaming", "Dancing", "Photography"],
+    answer: "Gaming",
+    image: "images/frank_hobby.png"
+  }
 ];
 
 let triviaPlayer = "";
 let allScores = JSON.parse(localStorage.getItem("triviaScores") || "[]");
 
 function startTrivia() {
+  document.getElementById("main-buttons").style.display = "none";
   triviaPlayer = prompt("Enter your name:");
   if (!triviaPlayer) return;
 
@@ -101,10 +141,22 @@ function startTrivia() {
   let score = 0;
 
   function showQuestion() {
-    container.innerHTML = `<div class='question'>${questions[current].question}</div>`;
+    container.innerHTML = "";
+    const questionImg = document.createElement("img");
+    questionImg.src = questions[current].image;
+    questionImg.alt = "Question Image";
+    questionImg.className = "question-img";
+
+    const questionText = document.createElement("div");
+    questionText.className = "question";
+    questionText.textContent = questions[current].question;
+
     const answersDiv = document.createElement("div");
     const feedbackDiv = document.createElement("div");
     feedbackDiv.className = "feedback";
+
+    container.appendChild(questionImg);
+    container.appendChild(questionText);
     container.appendChild(answersDiv);
     container.appendChild(feedbackDiv);
 
