@@ -20,32 +20,28 @@
 <div id="game-container"></div>
 
 <script>
-// ======== TRIVIA ============
+// ======== TRIVIA ==========
 const triviaData = [
-  {
-    question: "What is Alice's favorite color?",
-    choices: ["Red", "Blue", "Green", "Purple"],
-    answer: "Blue"
-  },
-  {
-    question: "Which city does Bob live in?",
-    choices: ["Rome", "Milan", "Florence", "Venice"],
-    answer: "Milan"
-  },
-  {
-    question: "What's Charlie's favorite food?",
-    choices: ["Pizza", "Sushi", "Burger", "Tacos"],
-    answer: "Sushi"
-  },
-  // Add more questions here...
+  { question: "What is Alice's favorite color?", choices: ["Red", "Blue", "Green", "Purple"], answer: "Blue" },
+  { question: "Which city does Bob live in?", choices: ["Rome", "Milan", "Florence", "Venice"], answer: "Milan" },
+  { question: "What's Charlie's favorite food?", choices: ["Pizza", "Sushi", "Burger", "Tacos"], answer: "Sushi" },
+  { question: "What instrument does Dana play?", choices: ["Guitar", "Piano", "Violin", "Drums"], answer: "Piano" },
+  { question: "Where did Eva go to college?", choices: ["Harvard", "MIT", "Stanford", "Oxford"], answer: "Stanford" },
+  { question: "What is Frank's hobby?", choices: ["Cooking", "Gaming", "Dancing", "Photography"], answer: "Gaming" }
 ];
 
+let triviaPlayer = "";
+let allScores = JSON.parse(localStorage.getItem("triviaScores") || "[]");
+
 function startTrivia() {
+  triviaPlayer = prompt("Enter your name:");
+  if (!triviaPlayer) return;
+
   const container = document.getElementById("game-container");
   container.innerHTML = "";
   container.style.display = "block";
 
-  const questions = [...triviaData].sort(() => 0.5 - Math.random()).slice(0, 10);
+  const questions = [...triviaData].sort(() => 0.5 - Math.random()).slice(0, 6);
   let current = 0;
   let score = 0;
 
@@ -65,7 +61,19 @@ function startTrivia() {
   }
 
   function showScore() {
-    container.innerHTML = `<h2>Game Over! Your Score: ${score}/10</h2>`;
+    allScores.push({ name: triviaPlayer, score: score });
+    localStorage.setItem("triviaScores", JSON.stringify(allScores));
+
+    container.innerHTML = `<h2>${triviaPlayer}, your score: ${score}/6</h2><h3>Leaderboard:</h3>`;
+
+    const list = document.createElement("ol");
+    allScores.sort((a, b) => b.score - a.score).forEach(entry => {
+      const item = document.createElement("li");
+      item.textContent = `${entry.name}: ${entry.score}`;
+      list.appendChild(item);
+    });
+    container.appendChild(list);
+
     const retry = document.createElement("button");
     retry.textContent = "Play Again";
     retry.onclick = startTrivia;
@@ -75,63 +83,11 @@ function startTrivia() {
   showQuestion();
 }
 
-// ========= FIGHTING GAME =========
-const fighters = [
-  { name: "Ilaria", special: "Gin & Tonic" },
-  { name: "Marco", special: "Pizza Slice" },
-  { name: "Jiajia", special: "Bubble Tea" }
-];
-
+// ========= FIGHTING GAME (placeholder) =========
 function startFighting() {
   const container = document.getElementById("game-container");
-  container.innerHTML = "";
+  container.innerHTML = "<h2>Fighting Game coming soon!</h2>";
   container.style.display = "block";
-
-  const select = document.createElement("div");
-  select.innerHTML = "<h2>Select Your Fighter:</h2>";
-  fighters.forEach(f => {
-    const btn = document.createElement("button");
-    btn.textContent = f.name;
-    btn.onclick = () => launchFight(f);
-    select.appendChild(btn);
-  });
-  container.appendChild(select);
-}
-
-function launchFight(player) {
-  const container = document.getElementById("game-container");
-  container.innerHTML = `<h2>You chose ${player.name}! Special Move: ${player.special}</h2>`;
-  
-  const canvas = document.createElement("canvas");
-  canvas.width = 600;
-  canvas.height = 200;
-  container.appendChild(canvas);
-
-  const ctx = canvas.getContext("2d");
-  let x = 100, vx = 0;
-  
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(x, 150, 30, 30);
-    ctx.font = "16px Arial";
-    ctx.fillText(`${player.name}`, x - 10, 145);
-    x += vx;
-    if (x < 0) x = 0;
-    if (x > canvas.width - 30) x = canvas.width - 30;
-    requestAnimationFrame(draw);
-  }
-
-  window.onkeydown = (e) => {
-    if (e.key === "ArrowRight") vx = 3;
-    if (e.key === "ArrowLeft") vx = -3;
-    if (e.key === "s") {
-      alert(`${player.name} uses their special move: ${player.special}!`);
-    }
-  };
-  window.onkeyup = () => { vx = 0; };
-
-  draw();
 }
 </script>
 
