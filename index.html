@@ -80,6 +80,7 @@
       padding: 0;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
 
@@ -94,8 +95,7 @@
 <div id="game-container"></div>
 
 <script>
-const triviaData = [
-  {
+const triviaData = [{
     question: "Quanto alza di bench Roberto",
     choices: ["30kg", "60kg", "100kg", "110kg"],
     answer: "110kg",
@@ -226,8 +226,7 @@ const triviaData = [
     choices: ["Dov'e' il mio casco?", "Giorgio", "La zia", "Geranio"],
     answer: "Giorgio",
     image: "./Giorgio.png"
-  }
-];
+  }];
 
 let triviaPlayer = "";
 let allScores = JSON.parse(localStorage.getItem("triviaScores") || "[]");
@@ -302,11 +301,29 @@ function startTrivia() {
     });
     container.appendChild(list);
 
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 }
+    });
+
     const retry = document.createElement("button");
     retry.textContent = "Play Again";
     retry.className = "answer-button";
     retry.onclick = startTrivia;
     container.appendChild(retry);
+
+    const reset = document.createElement("button");
+    reset.textContent = "Reset Scores";
+    reset.className = "answer-button";
+    reset.onclick = () => {
+      localStorage.removeItem("triviaScores");
+      allScores = [];
+      alert("Scores reset!");
+      container.innerHTML = "";
+      document.getElementById("main-buttons").style.display = "block";
+    };
+    container.appendChild(reset);
   }
 
   showQuestion();
