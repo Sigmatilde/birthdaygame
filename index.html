@@ -66,9 +66,18 @@
       to { opacity: 1; }
     }
 
+    .leaderboard-item {
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .gold { color: gold; font-weight: bold; }
+    .silver { color: silver; font-weight: bold; }
+    .bronze { color: #cd7f32; font-weight: bold; }
+
     ol {
       text-align: left;
       display: inline-block;
+      padding: 0;
     }
   </style>
 </head>
@@ -232,7 +241,7 @@ function startTrivia() {
   container.innerHTML = "";
   container.style.display = "block";
 
-  const questions = [...triviaData].sort(() => 0.5 - Math.random()).slice(0, 6);
+  const questions = [...triviaData].sort(() => 0.5 - Math.random()).slice(0, 7);
   let current = 0;
   let score = 0;
 
@@ -279,11 +288,15 @@ function startTrivia() {
     allScores.push({ name: triviaPlayer, score: score });
     localStorage.setItem("triviaScores", JSON.stringify(allScores));
 
-    container.innerHTML = `<h2>${triviaPlayer}, your score: ${score}/6</h2><h3>Leaderboard:</h3>`;
+    container.innerHTML = `<h2>${triviaPlayer}, your score: ${score}/7</h2><h3>🏆 Leaderboard 🏆</h3>`;
 
     const list = document.createElement("ol");
-    allScores.sort((a, b) => b.score - a.score).forEach(entry => {
+    allScores.sort((a, b) => b.score - a.score).forEach((entry, index) => {
       const item = document.createElement("li");
+      item.className = "leaderboard-item";
+      if (index === 0) item.classList.add("gold");
+      else if (index === 1) item.classList.add("silver");
+      else if (index === 2) item.classList.add("bronze");
       item.textContent = `${entry.name}: ${entry.score}`;
       list.appendChild(item);
     });
